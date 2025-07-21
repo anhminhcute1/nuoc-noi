@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý đóng tiền nước</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+      .container {
+        max-width: 400px;
+        margin: auto;
+      }
+      .person {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0;
+      }
+      button:disabled {
+        background: #898b8c;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Đóng tiền nước 503B</h2>
+    <div class="container" id="people-list"></div>
+    <button
+      style="background-color: chartreuse"
+      style="font-family: sans-serif"
+      id="reset"
+      onclick="resetPayments()"
+      disabled
+    >
+      RESET
+    </button>
+
+    <script>
+      const people = ["Minh", "Lễ", "T.Anh", "Quang", "Huy", "Nhân"];
+      let payments = JSON.parse(localStorage.getItem("payments")) || {};
+
+      function renderList() {
+        const list = document.getElementById("people-list");
+        list.innerHTML = "30";
+        let paidCount = 0;
+
+        people.forEach((person, index) => {
+          if (payments[person]) paidCount++;
+          list.innerHTML += `
+                    <div class="person">
+                        <span>${person}</span>
+                        <button onclick="markPaid('${person}')" ${
+            payments[person] ? "disabled" : ""
+          }>${payments[person] ? "Đã đóng" : "Đóng tiền"}</button>
+                    </div>
+                `;
+        });
+
+        document.getElementById("reset").disabled = paidCount < 6;
+      }
+
+      function markPaid(person) {
+        payments[person] = true;
+        localStorage.setItem("payments", JSON.stringify(payments));
+        renderList();
+      }
+
+      function resetPayments() {
+        payments = {};
+        localStorage.setItem("payments", JSON.stringify(payments));
+        renderList();
+      }
+
+      renderList();
+    </script>
+  </body>
+</html>
